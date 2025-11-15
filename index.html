@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Health Monitoring System</title>
+    <meta name="description" content="System for collecting and analyzing child health data from multiple health centers">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3b82f6",
+                        secondary: "#1d4ed8",
+                        accent: "#10b981"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-child text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-gray-800">Child Health Monitor</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="#data-entry" class="px-3 py-2 text-gray-700 hover:text-primary">Data Entry</a>
+                <a href="#dashboard" class="px-3 py-2 text-gray-700 hover:text-primary">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Data Entry Section -->
+        <section id="data-entry" class="mb-12">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Monthly Child Health Data Form</h2>
+                <form id="healthForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Health Center Information -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">Health Center Information</h3>
+                            <div>
+                                <label for="centerName" class="block text-sm font-medium text-gray-700">Health Center Name</label>
+                                <input type="text" id="centerName" name="centerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="district" class="block text-sm font-medium text-gray-700">District</label>
+                                <input type="text" id="district" name="district" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="reportingMonth" class="block text-sm font-medium text-gray-700">Reporting Month</label>
+                                <input type="month" id="reportingMonth" name="reportingMonth" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                        </div>
+
+                        <!-- Staff Information -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">Staff Information</h3>
+                            <div>
+                                <label for="reporterName" class="block text-sm font-medium text-gray-700">Reporter Name</label>
+                                <input type="text" id="reporterName" name="reporterName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="reporterEmail" class="block text-sm font-medium text-gray-700">Reporter Email</label>
+                                <input type="email" id="reporterEmail" name="reporterEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="reporterPhone" class="block text-sm font-medium text-gray-700">Reporter Phone</label>
+                                <input type="tel" id="reporterPhone" name="reporterPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Indicators -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">Child Health Indicators</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="totalChildren" class="block text-sm font-medium text-gray-700">Total Children Registered</label>
+                                <input type="number" id="totalChildren" name="totalChildren" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="fullyImmunized" class="block text-sm font-medium text-gray-700">Fully Immunized</label>
+                                <input type="number" id="fullyImmunized" name="fullyImmunized" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="malnourished" class="block text-sm font-medium text-gray-700">Malnourished Cases</label>
+                                <input type="number" id="malnourished" name="malnourished" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="diarrheaCases" class="block text-sm font-medium text-gray-700">Diarrhea Cases</label>
+                                <input type="number" id="diarrheaCases" name="diarrheaCases" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="pneumoniaCases" class="block text-sm font-medium text-gray-700">Pneumonia Cases</label>
+                                <input type="number" id="pneumoniaCases" name="pneumoniaCases" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="vitaminASupplemented" class="block text-sm font-medium text-gray-700">Vitamin A Supplemented</label>
+                                <input type="number" id="vitaminASupplemented" name="vitaminASupplemented" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div>
+                        <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
+                        <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            Submit Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="mb-12">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Health Data Dashboard</h2>
+                    <button id="exportBtn" class="px-4 py-2 bg-accent text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
+                        <i class="fas fa-download mr-2"></i>Export as CSV
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label for="filterDistrict" class="block text-sm font-medium text-gray-700">District</label>
+                        <select id="filterDistrict" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            <option value="">All Districts</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterMonth" class="block text-sm font-medium text-gray-700">Month</label>
+                        <select id="filterMonth" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            <option value="">All Months</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterCenter" class="block text-sm font-medium text-gray-700">Health Center</label>
+                        <select id="filterCenter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary">
+                            <option value="">All Centers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-sm font-medium text-blue-800">Total Children</h3>
+                        <p id="totalChildrenCard" class="text-2xl font-bold text-blue-600">0</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="text-sm font-medium text-green-800">Fully Immunized</h3>
+                        <p id="immunizedCard" class="text-2xl font-bold text-green-600">0</p>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h3 class="text-sm font-medium text-yellow-800">Malnourished</h3>
+                        <p id="malnourishedCard" class="text-2xl font-bold text-yellow-600">0</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Immunization Coverage</h3>
+                        <canvas id="immunizationChart" height="300"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Disease Prevalence</h3>
+                        <canvas id="diseaseChart" height="300"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 lg:col-span-2">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-4">Monthly Trends</h3>
+                        <canvas id="trendChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Data Table -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Detailed Data</h3>
+                    <div class="overflow-x-auto">
+                        <table id="dataTable" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Center</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Children</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Immunized</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Malnourished</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-100 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p>© 2023 Child Health Monitoring System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data storage (in a real app, this would be from a database)
+        let healthData = [
+            {
+                "id": 1,
+                "centerName": "Central Health Center",
+                "district": "North District",
+                "reportingMonth": "2023-10",
+                "reporterName": "Dr. Sarah Johnson",
+                "reporterEmail": "sarah@health.org",
+                "reporterPhone": "1234567890",
+                "totalChildren": 245,
+                "fullyImmunized": 210,
+                "malnourished": 15,
+                "diarrheaCases": 8,
+                "pneumoniaCases": 5,
+                "vitaminASupplemented": 230,
+                "notes": "Increased cases of diarrhea due to seasonal changes"
+            },
+            {
+                "id": 2,
+                "centerName": "Westside Clinic",
+                "district": "West District",
+                "reportingMonth": "2023-10",
+                "reporterName": "Nurse Mark Williams",
+                "reporterEmail": "mark@health.org",
+                "reporterPhone": "9876543210",
+                "totalChildren": 180,
+                "fullyImmunized": 165,
+                "malnourished": 12,
+                "diarrheaCases": 5,
+                "pneumoniaCases": 3,
+                "vitaminASupplemented": 175,
+                "notes": "Nutrition program showing positive results"
+            },
+            {
+                "id": 3,
+                "centerName": "Eastside Clinic",
+                "district": "East District",
+                "reportingMonth": "2023-09",
+                "reporterName": "Dr. Lisa Chen",
+                "reporterEmail": "lisa@health.org",
+                "reporterPhone": "5551234567",
+                "totalChildren": 195,
+                "fullyImmunized": 180,
+                "malnourished": 8,
+                "diarrheaCases": 6,
+                "pneumoniaCases": 4,
+                "vitaminASupplemented": 190,
+                "notes": "Regular checkups conducted"
+            }
+        ];
+
+        // Chart instances
+        let immunizationChart, diseaseChart, trendChart;
+
+        // DOM Elements
+        const healthForm = document.getElementById('healthForm');
+        const exportBtn = document.getElementById('exportBtn');
+        const filterDistrict = document.getElementById('filterDistrict');
+        const filterMonth = document.getElementById('filterMonth');
+        const filterCenter = document.getElementById('filterCenter');
+        const tableBody = document.getElementById('tableBody');
+        const totalChildrenCard = document.getElementById('totalChildrenCard');
+        const immunizedCard = document.getElementById('immunizedCard');
+        const malnourishedCard = document.getElementById('malnourishedCard');
+
+        // Initialize the application
+        function init() {
+            // Load data and render dashboard
+            renderDashboard();
+            
+            // Set up form submission
+            healthForm.addEventListener('submit', handleFormSubmit);
+            
+            // Set up export button
+            exportBtn.addEventListener('click', exportToCSV);
+            
+            // Set up filter change events
+            filterDistrict.addEventListener('change', renderDashboard);
+            filterMonth.addEventListener('change', renderDashboard);
+            filterCenter.addEventListener('change', renderDashboard);
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(healthForm);
+            const newEntry = {
+                id: healthData.length + 1,
+                centerName: formData.get('centerName'),
+                district: formData.get('district'),
+                reportingMonth: formData.get('reportingMonth'),
+                reporterName: formData.get('reporterName'),
+                reporterEmail: formData.get('reporterEmail'),
+                reporterPhone: formData.get('reporterPhone'),
+                totalChildren: parseInt(formData.get('totalChildren')),
+                fullyImmunized: parseInt(formData.get('fullyImmunized')),
+                malnourished: parseInt(formData.get('malnourished')),
+                diarrheaCases: parseInt(formData.get('diarrheaCases')),
+                pneumoniaCases: parseInt(formData.get('pneumoniaCases')),
+                vitaminASupplemented: parseInt(formData.get('vitaminASupplemented')),
+                notes: formData.get('notes')
+            };
+            
+            healthData.push(newEntry);
+            renderDashboard();
+            healthForm.reset();
+            
+            alert('Data submitted successfully!');
+        }
+
+        // Render the dashboard with current data and filters
+        function renderDashboard() {
+            // Get filter values
+            const districtFilter = filterDistrict.value;
+            const monthFilter = filterMonth.value;
+            const centerFilter = filterCenter.value;
+            
+            // Filter data
+            const filteredData = healthData.filter(entry => {
+                return (!districtFilter || entry.district === districtFilter) &&
+                       (!monthFilter || entry.reportingMonth === monthFilter) &&
+                       (!centerFilter || entry.centerName === centerFilter);
+            });
+            
+            // Update filter dropdowns
+            updateFilterOptions();
+            
+            // Update summary cards
+            updateSummaryCards(filteredData);
+            
+            // Update data table
+            updateDataTable(filteredData);
+            
+            // Update charts
+            updateCharts(filteredData);
+        }
+
+        // Update filter dropdown options
+        function updateFilterOptions() {
+            // Get unique values for filters
+            const districts = [...new Set(healthData.map(item => item.district))];
+            const months = [...new Set(healthData.map(item => item.reportingMonth))];
+            const centers = [...new Set(healthData.map(item => item.centerName))];
+            
+            // Update district filter
+            updateSelectOptions(filterDistrict, districts);
+            
+            // Update month filter
+            updateSelectOptions(filterMonth, months);
+            
+            // Update center filter
+            updateSelectOptions(filterCenter, centers);
+        }
+
+        // Helper function to update select options
+        function updateSelectOptions(selectElement, options) {
+            const currentValue = selectElement.value;
+            selectElement.innerHTML = '<option value="">All ' + selectElement.id.replace('filter', '') + 's</option>';
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                selectElement.appendChild(optionElement);
+            });
+            
+            // Restore previous selection if it still exists
+            if (options.includes(currentValue)) {
+                selectElement.value = currentValue;
+            }
+        }
+
+        // Update summary cards
+        function updateSummaryCards(data) {
+            const totalChildren = data.reduce((sum, entry) => sum + entry.totalChildren, 0);
+            const totalImmunized = data.reduce((sum, entry) => sum + entry.fullyImmunized, 0);
+            const totalMalnourished = data.reduce((sum, entry) => sum + entry.malnourished, 0);
+            
+            totalChildrenCard.textContent = totalChildren;
+            immunizedCard.textContent = totalImmunized;
+            malnourishedCard.textContent = totalMalnourished;
+        }
+
+        // Update data table
+        function updateDataTable(data) {
+            tableBody.innerHTML = '';
+            
+            data.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.centerName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.district}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.reportingMonth}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.totalChildren}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.fullyImmunized}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${entry.malnourished}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update charts
+        function updateCharts(data) {
+            // Group data by month for trend chart
+            const monthlyData = {};
+            data.forEach(entry => {
+                if (!monthlyData[entry.reportingMonth]) {
+                    monthlyData[entry.reportingMonth] = {
+                        totalChildren: 0,
+                        fullyImmunized: 0,
+                        malnourished: 0,
+                        diarrheaCases: 0,
+                        pneumoniaCases: 0
+                    };
+                }
+                
+                monthlyData[entry.reportingMonth].totalChildren += entry.totalChildren;
+                monthlyData[entry.reportingMonth].fullyImmunized += entry.fullyImmunized;
+                monthlyData[entry.reportingMonth].malnourished += entry.malnourished;
+                monthlyData[entry.reportingMonth].diarrheaCases += entry.diarrheaCases;
+                monthlyData[entry.reportingMonth].pneumoniaCases += entry.pneumoniaCases;
+            });
+            
+            const months = Object.keys(monthlyData).sort();
+            const immunizationRates = months.map(month => {
+                const data = monthlyData[month];
+                return data.totalChildren > 0 ? Math.round((data.fullyImmunized / data.totalChildren) * 100) : 0;
+            });
+            
+            // Group data by district for immunization chart
+            const districtData = {};
+            data.forEach(entry => {
+                if (!districtData[entry.district]) {
+                    districtData[entry.district] = {
+                        totalChildren: 0,
+                        fullyImmunized: 0
+                    };
+                }
+                
+                districtData[entry.district].totalChildren += entry.totalChildren;
+                districtData[entry.district].fullyImmunized += entry.fullyImmunized;
+            });
+            
+            const districts = Object.keys(districtData);
+            const districtImmunizationRates = districts.map(district => {
+                const data = districtData[district];
+                return data.totalChildren > 0 ? Math.round((data.fullyImmunized / data.totalChildren) * 100) : 0;
+            });
+            
+            // Disease data
+            const diseases = ['Diarrhea', 'Pneumonia'];
+            const diseaseCounts = [
+                data.reduce((sum, entry) => sum + entry.diarrheaCases, 0),
+                data.reduce((sum, entry) => sum + entry.pneumoniaCases, 0)
+            ];
+            
+            // Initialize or update charts
+            if (!immunizationChart) {
+                immunizationChart = new Chart(
+                    document.getElementById('immunizationChart'),
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: districts,
+                            datasets: [{
+                                label: 'Immunization Rate (%)',
+                                data: districtImmunizationRates,
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100
+                                }
+                            }
+                        }
+                    }
+                );
+            } else {
+                immunizationChart.data.labels = districts;
+                immunizationChart.data.datasets[0].data = districtImmunizationRates;
+                immunizationChart.update();
+            }
+            
+            if (!diseaseChart) {
+                diseaseChart = new Chart(
+                    document.getElementById('diseaseChart'),
+                    {
+                        type: 'pie',
+                        data: {
+                            labels: diseases,
+                            datasets: [{
+                                data: diseaseCounts,
+                                backgroundColor: [
+                                    'rgba(239, 68, 68, 0.7)',
+                                    'rgba(249, 115, 22, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(239, 68, 68, 1)',
+                                    'rgba(249, 115, 22, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true
+                        }
+                    }
+                );
+            } else {
+                diseaseChart.data.datasets[0].data = diseaseCounts;
+                diseaseChart.update();
+            }
+            
+            if (!trendChart) {
+                trendChart = new Chart(
+                    document.getElementById('trendChart'),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: months,
+                            datasets: [
+                                {
+                                    label: 'Total Children',
+                                    data: months.map(month => monthlyData[month].totalChildren),
+                                    borderColor: 'rgba(59, 130, 246, 1)',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    borderWidth: 2,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'Fully Immunized',
+                                    data: months.map(month => monthlyData[month].fullyImmunized),
+                                    borderColor: 'rgba(16, 185, 129, 1)',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    borderWidth: 2,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'Malnourished',
+                                    data: months.map(month => monthlyData[month].malnourished),
+                                    borderColor: 'rgba(245, 158, 11, 1)',
+                                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                                    borderWidth: 2,
+                                    tension: 0.1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            interaction: {
+                                mode: 'index',
+                                intersect: false
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    }
+                );
+            } else {
+                trendChart.data.labels = months;
+                trendChart.data.datasets[0].data = months.map(month => monthlyData[month].totalChildren);
+                trendChart.data.datasets[1].data = months.map(month => monthlyData[month].fullyImmunized);
+                trendChart.data.datasets[2].data = months.map(month => monthlyData[month].malnourished);
+                trendChart.update();
+            }
+        }
+
+        // Export data to CSV
+        function exportToCSV() {
+            // Get filtered data
+            const districtFilter = filterDistrict.value;
+            const monthFilter = filterMonth.value;
+            const centerFilter = filterCenter.value;
+            
+            const filteredData = healthData.filter(entry => {
+                return (!districtFilter || entry.district === districtFilter) &&
+                       (!monthFilter || entry.reportingMonth === monthFilter) &&
+                       (!centerFilter || entry.centerName === centerFilter);
+            });
+            
+            if (filteredData.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            // Create CSV content
+            const headers = Object.keys(filteredData[0]);
+            let csvContent = headers.join(',') + '\n';
+            
+            filteredData.forEach(item => {
+                const row = headers.map(header => {
+                    return typeof item[header] === 'string' ? `"${item[header]}"` : item[header];
+                }).join(',');
+                csvContent += row + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'child_health_data.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
